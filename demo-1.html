@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>File Tree Generator Demo</title>
+    <meta name="description" content="Retrieves directories and files recursively with Ajax from a main directory and displays the tree structure. Programmed in pure Javascript / CSS without any dependency. PHP connector is provided, you can write your own in any server language (NodeJS, ASP, ...)">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <h1 class="pt-5 text-center">File Tree Generator Demo</h1>
+
+    <div class="d-flex mx-auto justify-content-center my-3" role="group">
+        <a href="#" class="btn btn-secondary mr-4 disabled">Demo 1</a>
+        <a href="demo-2.html" class="btn btn-primary">Demo 2</a>
+    </div>
+
+    <p class="text-center">Documentation &amp; Download: <a href="https://github.com/migliori/file-tree-generator" title="File Tree Generator">https://github.com/migliori/file-tree-generator</a></p>
+    <div class="py-2 mb-4 text-center text-muted border">
+        <p id="ft-output" class="small mb-0">&nbsp;<br>&nbsp;</p>
+    </div>
+    <div class="container" id="file-tree-wrapper">
+        <div class="row">
+            <div class="col-sm-3 ft-tree"></div>
+            <div class="col-sm-9 ft-explorer"></div>
+        </div>
+    </div>
+
+    <p class="text-center"><a href="https://www.miglisoft.com/">@miglisoft</a></p>
+
+    <script src="dist/js/file-tree.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+
+            var options = {
+                mainDir: 'demo-files',
+                elementClick: function (filePath, fileName) {
+                    document.getElementById('ft-output').innerHTML = '<strong>filePath</strong>: ' + filePath + ',<br><strong>fileName</strong>: ' + fileName;
+                },
+                cancelBtnClick: function (filePath, fileName) {
+                    alert('Cancelled');
+                },
+                okBtnClick: function (filePath, fileName) {
+                    alert('filePath: ' + filePath + ' - fileName: ' + fileName);
+                }
+            };
+
+            var ft = new fileTree('file-tree-wrapper', options);
+        });
+    </script>
+</body>
+
+</html>

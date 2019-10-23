@@ -1,0 +1,43 @@
+{
+  "name": "file-tree-generator",
+  "version": "1.0.0",
+  "description": "Recovers directories and files recursively with Ajax from a main directory and displays the tree structure. The script called with Ajax is provided in several server languages: PHP, ASP, Node.js, .…",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/migliori/file-tree-generator.git"
+  },
+  "keywords": [
+    "file",
+    "tree",
+    "javascript",
+    "bootstrap"
+  ],
+  "author": "Gilles Migliori",
+  "license": "GNU General Public License v3.0",
+  "bugs": {
+    "url": "https://github.com/migliori/file-tree-generator/issues"
+  },
+  "homepage": "https://github.com/migliori/file-tree-generator#readme",
+  "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
+    "browserify": "^16.5.0",
+    "fancy-log": "^1.3.3",
+    "gulp": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^5.0.1",
+    "gulp-uglify": "^3.0.2",
+    "tsify": "^4.0.1",
+    "typescript": "^3.6.4",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.1"
+  },
+  "devDependencies": {
+    "babelify": "^8.0.0"
+  }
+}
