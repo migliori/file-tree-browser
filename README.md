@@ -16,9 +16,9 @@
 
 **File Tree Generator** is a Javascript plugin built to **browse folders** and **select files**.
 
-It retrieves directories and files recursively with Ajax from a main directory and displays the tree structure. You can browse and select, then do any stuff with the choosen file.
+It retrieves directories and files recursively with Ajax from a main directory and displays the tree structure. You can browse and select, move files from folder to folder, do any stuff with the choosen file.
 
-File Tree Generator is programmed in **pure Javascript** (compiled TypeScript) and **doesn't require any dependency**.
+File Tree Generator is programmed in **Vanilla Javascript** (compiled TypeScript) and **doesn't require any dependency**.
 
 a **PHP connector** is provided to retrieve the main directory content, you can write your own in any server language (NodeJS, ASP, ...).
 
@@ -72,6 +72,7 @@ The default template is built with Bootstrap 4, but Bootstrap is **not required*
 Name | type | Default Value | Description
 ---- | ---- | ----- | -------
 connector | string | 'php' | connector file extension in `dist/connectors/connector.[ext]`
+dragAndDrop | boolean | true | allow or disallow to drag files from folder to folder
 explorerMode | string | 'list' | 'list' or 'grid'
 extensions | array | ['.*'] | Array with the authorized file extensions
 mainDir | string | 'demo-files' | main directory id

@@ -9,11 +9,11 @@
 =                  File Tree                  =
 =============================================*/
 
-.ft-tree .ft-folder ul {
+.ft-tree .ft-folder-container ul {
     display: none;
 }
 
-.ft-tree .ft-folder.ft-folder-open > ul {
+.ft-tree .ft-folder-container.ft-folder-open>ul {
     display: block;
 }
 
@@ -22,12 +22,12 @@
     padding-left: 1.66rem;
 }
 
-.ft-tree .ft-folder i {
+.ft-tree .ft-folder-container i {
     color: var(--folder-color);
     margin-right: .5rem;
 }
 
-.ft-tree .ft-folder a {
+.ft-tree .ft-folder-container a {
     color: var(--text-color);
 }
 

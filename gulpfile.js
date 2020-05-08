@@ -9,7 +9,7 @@ var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
 var paths = {
-    files: ['src/connectors/*.*', 'src/templates/*.*', 'src/icons/fonts/*.*', 'src/icons/style.css']
+    files: ['src/ajax/*.*', 'src/connectors/*.*', 'src/lib/*?/*.*', 'src/templates/*.*', 'src/icons/fonts/*.*', 'src/icons/style.css']
 };
 
 var watchedBrowserify = watchify(browserify({

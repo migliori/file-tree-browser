@@ -1,11 +1,13 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 class fileTree {
     constructor(targetId, options = {}) {
+        this.listeningFolders = [];
         this.template = null;
         this.treeMarkup = '';
         this.targetId = targetId;
         const defaults = {
             connector: 'php',
+            dragAndDrop: true,
             // available modes: list | grid
             explorerMode: 'list',
             extensions: ['.*'],
@@ -60,24 +62,38 @@ class fileTree {
         this.getFiles()
             .then((data) => {
             this.jsonTree = JSON.parse(data);
+            if (this.jsonTree.error) {
+                throw this.jsonTree.error;
+            }
             this.buildTree();
-            this.render();
+            if (this.options.dragAndDrop === true) {
+                this.loadScript(this.scriptSrc + 'lib/html5sortable/html5sortable.min.js').then(() => {
+                    this.render();
+                    this.loadScript(this.scriptSrc + 'lib/crypto-js/crypto-js.min.js');
+                })
+                    .catch(() => {
+                    console.error('Script loading failed :( ');
+                });
+            }
+            else {
+                this.render();
+            }
         })
             .catch((err) => {
-            console.error('Augh, there was an error!', err.statusText);
+            console.error('Augh, there was an error!', err);
         });
     }
     render() {
         const $targetId = document.getElementById(this.targetId);
         this.loadCss();
         $targetId.querySelectorAll('.ft-tree')[0].innerHTML = this.treeMarkup;
-        const folders = $targetId.querySelectorAll('.ft-tree .ft-folder');
+        const folders = $targetId.querySelectorAll('.ft-tree .ft-folder-container');
         Array.prototype.forEach.call(folders, (el, i) => {
             el.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 // get all the parent folders
-                const parents = this.parentsUntil(el, 'ft-folder', 'ft-' + this.targetId + '-root');
+                const parents = this.parentsUntil(el, 'ft-folder-container', 'ft-' + this.targetId + '-root');
                 // open all the parent folders, close the others
                 Array.prototype.forEach.call(folders, (folder, i) => {
                     const ic = folder.querySelector('i');
@@ -124,6 +140,19 @@ class fileTree {
             document.getElementsByTagName('head')[0].appendChild(linkElement);
         }
     }
+    loadScript(src) {
+        var script = document.createElement('script');
+        script.setAttribute('src', src);
+        document.body.appendChild(script);
+        return new Promise((res, rej) => {
+            script.onload = function () {
+                res();
+            };
+            script.onerror = function () {
+                rej();
+            };
+        });
+    }
     buildFolderContent(jst = this.jsonTree, url, deph) {
         const folderContent = {
             folders: [],
@@ -133,7 +162,9 @@ class fileTree {
             let value = jst[key];
             if (isNaN(parseInt(key))) {
                 // directory
+                let data = jst[key];
                 folderContent.folders.push({
+                    parent: data.parent,
                     dataRefId: key + '-' + (deph + 1).toString(),
                     name: key,
                     url: url + key + '/'
@@ -170,7 +201,7 @@ class fileTree {
     buildTree(jst = this.jsonTree, url = this.options.mainDir + '/', deph = 0) {
         if (deph === 0) {
             const rootId = 'ft-' + this.targetId + '-root';
-            this.treeMarkup += `<ul><li id="${rootId}" class="ft-folder ft-folder-open"><i class="${this.icons.folderOpen}"></i><a href="#" data-url="${url}">root</a>`;
+            this.treeMarkup = `<ul class="ft-tree"><li id="${rootId}" class="ft-folder-container ft-folder-open"><div><i class="${this.icons.folderOpen}"></i><a href="#" data-url="${url}">root</a></div>`;
             this.foldersContent[rootId] = this.buildFolderContent(this.jsonTree, url, deph);
             deph += 1;
         }
@@ -180,7 +211,7 @@ class fileTree {
                 // directory
                 const folderId = key + '-' + deph.toString();
                 this.foldersContent[folderId] = this.buildFolderContent(jsonSubTree, url + key + '/', deph);
-                this.treeMarkup += `<ul><li id="${folderId}" class="ft-folder"><i class="${this.icons.folder}"></i><a href="#" data-url="${url + key}">${key}</a>`;
+                this.treeMarkup += `<ul><li id="${folderId}" class="ft-folder-container"><div><i class="${this.icons.folder}"></i><a href="#" data-url="${url + key}">${key}</a></div>`;
                 if (deph < this.options.maxDeph) {
                     this.buildTree(jsonSubTree, url + key + '/', deph + 1);
                 }
@@ -189,6 +220,104 @@ class fileTree {
         }
         if (deph === 0) {
             this.treeMarkup += `</li></ul>`;
+        }
+    }
+    enableDrag() {
+        let explorerContainerSelector = '.ft-explorer-list-container';
+        if (this.options.explorerMode === 'grid') {
+            explorerContainerSelector = '.ft-explorer-grid-container';
+        }
+        let folders = document.getElementById('file-tree-wrapper').querySelectorAll('.ft-folder-container');
+        sortable(explorerContainerSelector, {
+            items: '.ft-file-container',
+            acceptFrom: false
+        });
+        folders.forEach((folder) => {
+            const folderId = folder.getAttribute('id');
+            // console.warn(folderId + ' => ' + this.currentFolderId);
+            if (this.listeningFolders.indexOf(folderId) === -1 || folderId.match(/^explorer-/)) {
+                if (folderId !== this.currentFolderId) {
+                    sortable('#' + folderId, {
+                        acceptFrom: '.ft-explorer-list-container, .ft-explorer-grid-container'
+                    });
+                    this.listeningFolders.push(folderId);
+                    // console.log('listening #' + folderId);
+                    sortable('#' + folderId)[0].addEventListener('sortupdate', this.moveFile.bind(this));
+                }
+                else {
+                    // console.log('skip #' + folderId);
+                }
+            }
+            else {
+                if (folderId === this.currentFolderId) {
+                    sortable('#' + folderId, 'disable');
+                    // console.log('disable #' + folderId);
+                }
+                else {
+                    sortable('#' + folderId, 'enable');
+                    // console.log('enable #' + folderId);
+                }
+            }
+        });
+    }
+    moveFile(e) {
+        for (let index = 0; index < e.detail.item.children.length; index++) {
+            const element = e.detail.item.children[index];
+            if (element.dataset.filename !== undefined && element.dataset.href !== undefined) {
+                const salt = '%t$qPP';
+                const filehash = encodeURIComponent(CryptoJS.SHA256(element.dataset.href + salt).toString());
+                const filename = encodeURIComponent(element.dataset.filename);
+                const filepath = encodeURIComponent(element.dataset.href);
+                const ext = encodeURIComponent(JSON.stringify(this.options.extensions));
+                let destpath = this.options.mainDir;
+                if (e.detail.destination.container.id !== 'ft-file-tree-wrapper-root') {
+                    destpath = document.getElementById(e.detail.destination.container.id.replace(/^explorer-/, '')).querySelector('div[draggable="true"] > a').getAttribute('data-url');
+                }
+                destpath += '/' + element.dataset.filename;
+                destpath = encodeURIComponent(destpath);
+                if (destpath !== filepath) {
+                    const data = `filename=${filename}&filepath=${filepath}&destpath=${destpath}&filehash=${filehash}&ext=${ext}`;
+                    // console.log('SEND TO ' + destpath);
+                    index = e.detail.item.children.length - 1;
+                    // move the file on server
+                    var request = new XMLHttpRequest();
+                    request.open('POST', this.scriptSrc + 'ajax/move-file.php', true);
+                    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                    request.onload = () => {
+                        if (request.status >= 200 && request.status < 400) {
+                            // Success!
+                            var resp = JSON.parse(request.response);
+                            if (resp.status === 'success') {
+                                const container = document.getElementById(e.detail.destination.container.id);
+                                const itemIndex = e.detail.destination.index;
+                                container.children[itemIndex].parentNode.removeChild(container.children[itemIndex]);
+                                // rebuild tree
+                                this.getFiles()
+                                    .then((data) => {
+                                    this.jsonTree = JSON.parse(data);
+                                    if (this.jsonTree.error) {
+                                        throw this.jsonTree.error;
+                                    }
+                                    this.buildTree();
+                                })
+                                    .catch((err) => {
+                                    console.error('Augh, there was an error!', err);
+                                });
+                            }
+                            else {
+                                console.error(resp);
+                            }
+                        }
+                        else {
+                            console.error('Ajax query failed');
+                        }
+                    };
+                    request.onerror = function () {
+                        console.error('There was a connection error of some sort');
+                    };
+                    request.send(data);
+                }
+            }
         }
     }
     getFileType(ext) {
@@ -291,6 +420,7 @@ class fileTree {
             for (let key in folders) {
                 let folder = folders[key];
                 clone = explorerFolder.content.cloneNode(true);
+                clone.querySelector('li').setAttribute('id', 'explorer-' + folder.dataRefId);
                 clone.querySelector('.ft-folder').setAttribute('data-href', folder.dataRefId);
                 clone.querySelector('.ft-folder i').classList.add(this.icons.folder);
                 clone.querySelector('.ft-foldername').innerHTML = folder.name;
@@ -403,9 +533,13 @@ class fileTree {
                     return false;
                 }, false);
             });
+            // enable files / folders drag & drop
+            if (this.options.dragAndDrop === true) {
+                this.enableDrag();
+            }
         })
             .catch((err) => {
-            console.error('Augh, there was an error!', err.statusText);
+            console.error('Augh, there was an error!', err);
         });
     }
     loadTemplates() {
@@ -466,6 +600,11 @@ class fileTree {
         }
         else {
             this.options.explorerMode = 'list';
+        }
+        for (let index = 0; index < this.listeningFolders.length; index++) {
+            if (this.listeningFolders[index].match(/^explorer-/)) {
+                this.listeningFolders.splice(index, 1);
+            }
         }
     }
 }

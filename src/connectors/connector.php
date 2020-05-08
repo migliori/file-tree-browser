@@ -32,6 +32,7 @@ function scan_recursively($source_dir, $authorized_ext, $directory_depth = 5, $h
         $filedata   = array();
         $new_depth  = $directory_depth - 1;
         $source_dir = rtrim($source_dir, '/').'/';
+        $parent_folder = null;
 
         while (false !== ($file = readdir($fp))) {
             // Remove '.', '..', and hidden files [optional]
