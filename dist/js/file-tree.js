@@ -16,7 +16,7 @@ class fileTree {
             cancelBtn: true,
             okBtn: true,
             template: 'bootstrap4',
-            elementClick: function (filePath, fileName) {
+            elementClick: function (filePath, fileName, e) {
                 console.log(filePath);
                 console.log(fileName);
             },
@@ -67,13 +67,20 @@ class fileTree {
             }
             this.buildTree();
             if (this.options.dragAndDrop === true) {
-                this.loadScript(this.scriptSrc + 'lib/html5sortable/html5sortable.min.js').then(() => {
-                    this.render();
+                if (typeof (CryptoJS) === "undefined") {
                     this.loadScript(this.scriptSrc + 'lib/crypto-js/crypto-js.min.js');
-                })
-                    .catch(() => {
-                    console.error('Script loading failed :( ');
-                });
+                }
+                if (typeof (sortable) === "undefined") {
+                    this.loadScript(this.scriptSrc + 'lib/html5sortable/html5sortable.min.js').then(() => {
+                        this.render();
+                    })
+                        .catch(() => {
+                        console.error('Script loading failed :( ');
+                    });
+                }
+                else {
+                    this.render();
+                }
             }
             else {
                 this.render();
@@ -160,7 +167,7 @@ class fileTree {
         };
         for (let key in jst) {
             let value = jst[key];
-            if (isNaN(parseInt(key))) {
+            if (typeof (value.ext) === 'undefined') {
                 // directory
                 let data = jst[key];
                 folderContent.folders.push({
@@ -207,7 +214,7 @@ class fileTree {
         }
         for (let key in jst) {
             let jsonSubTree = jst[key];
-            if (isNaN(parseInt(key))) {
+            if (typeof (jsonSubTree[0]) === 'object') {
                 // directory
                 const folderId = key + '-' + deph.toString();
                 this.foldersContent[folderId] = this.buildFolderContent(jsonSubTree, url + key + '/', deph);
@@ -227,7 +234,7 @@ class fileTree {
         if (this.options.explorerMode === 'grid') {
             explorerContainerSelector = '.ft-explorer-grid-container';
         }
-        let folders = document.getElementById('file-tree-wrapper').querySelectorAll('.ft-folder-container');
+        let folders = document.getElementById(this.targetId).querySelectorAll('.ft-folder-container');
         sortable(explorerContainerSelector, {
             items: '.ft-file-container',
             acceptFrom: false
@@ -270,7 +277,7 @@ class fileTree {
                 const filepath = encodeURIComponent(element.dataset.href);
                 const ext = encodeURIComponent(JSON.stringify(this.options.extensions));
                 let destpath = this.options.mainDir;
-                if (e.detail.destination.container.id !== 'ft-file-tree-wrapper-root') {
+                if (e.detail.destination.container.id !== 'ft-' + this.targetId + '-root') {
                     destpath = document.getElementById(e.detail.destination.container.id.replace(/^explorer-/, '')).querySelector('div[draggable="true"] > a').getAttribute('data-url');
                 }
                 destpath += '/' + element.dataset.filename;
@@ -513,7 +520,7 @@ class fileTree {
                         target.closest('.ft-file-container').classList.add('active');
                         const targetFilename = target.getAttribute('data-filename');
                         const targetHref = target.getAttribute('data-href');
-                        this.options.elementClick(targetHref, targetFilename);
+                        this.options.elementClick(targetHref, targetFilename, e);
                     }
                     return false;
                 }, false);
