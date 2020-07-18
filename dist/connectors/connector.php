@@ -17,16 +17,22 @@
 //
 
 $root = rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-$main_dir = $root . rtrim(urldecode($_POST['dir']), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-$authorized_ext = array_values(json_decode(stripslashes($_POST['ext'])));
+// $main_dir = $root . rtrim(urldecode($_POST['dir']), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+// $authorized_ext = array_values(json_decode(stripslashes($_POST['ext'])));
+$folder_prefix = '';
+if (preg_match('`[a-z-]+`', $_POST['folder_prefix'])) {
+    $folder_prefix = $_POST['folder_prefix'];
+}
+$main_dir = $root . '/demo-files' . DIRECTORY_SEPARATOR;
+$authorized_ext = ['.jpg', '.jpeg', '.png'];
 if (file_exists($main_dir)) {
-    $filedata = scan_recursively($main_dir, $authorized_ext);
+    $filedata = scan_recursively($main_dir, $authorized_ext, $folder_prefix);
     echo json_encode($filedata);
 } else {
     echo 'cannot open dir ' . $main_dir;
 }
 
-function scan_recursively($source_dir, $authorized_ext, $directory_depth = 5, $hidden = false)
+function scan_recursively($source_dir, $authorized_ext, $folder_prefix, $directory_depth = 5, $hidden = false)
 {
     if ($fp = @opendir($source_dir)) {
         $filedata   = array();
@@ -41,7 +47,7 @@ function scan_recursively($source_dir, $authorized_ext, $directory_depth = 5, $h
             }
 
             if (($directory_depth < 1 or $new_depth > 0) && @is_dir($source_dir.$file)) {
-                $filedata[$file] = scan_recursively($source_dir.$file.'/', $authorized_ext, $new_depth, $hidden);
+                $filedata[$folder_prefix . $file] = scan_recursively($source_dir.$file.'/', $authorized_ext, $folder_prefix, $new_depth, $hidden);
             } else if(is_authorized($file, $authorized_ext)) {
                 $filedata[] = array(
                     'ext'  => pathinfo($file, PATHINFO_EXTENSION),

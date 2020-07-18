@@ -21,6 +21,8 @@ class fileTree {
 
         const defaults = {
             connector: 'php',
+            // prefix folder names to accept numbered folders. allowed chars = [a-z-]+
+            folderPrefix: 'folder-',
             dragAndDrop: true,
             // available modes: list | grid
             explorerMode: 'list',
@@ -191,11 +193,12 @@ class fileTree {
             if (typeof (value.ext) === 'undefined') {
                 // directory
                 let data: any = jst[key];
+                const folderName = key.replace(this.options.folderPrefix, '');
                 folderContent.folders.push({
                     parent: data.parent,
                     dataRefId: key + '-' + (deph + 1).toString(),
-                    name: key,
-                    url: url + key + '/'
+                    name: folderName,
+                    url: url + folderName + '/'
                 });
             } else {
                 // file
@@ -234,14 +237,16 @@ class fileTree {
             deph += 1;
         }
         for (let key in jst) {
+            // key = key.replace(this.options.folderPrefix, '');
             let jsonSubTree: any = jst[key];
             if (typeof (jsonSubTree[0]) === 'object') {
                 // directory
                 const folderId: any = key + '-' + deph.toString();
-                this.foldersContent[folderId] = this.buildFolderContent(jsonSubTree, url + key + '/', deph);
-                this.treeMarkup += `<ul><li id="${folderId}" class="ft-folder-container"><div><i class="${this.icons.folder}"></i><a href="#" data-url="${url + key}">${key}</a></div>`;
+                const folderName = key.replace(this.options.folderPrefix, '');
+                this.foldersContent[folderId] = this.buildFolderContent(jsonSubTree, url + folderName + '/', deph);
+                this.treeMarkup += `<ul><li id="${folderId}" class="ft-folder-container"><div><i class="${this.icons.folder}"></i><a href="#" data-url="${url + folderName}">${folderName}</a></div>`;
                 if (deph < this.options.maxDeph) {
-                    this.buildTree(jsonSubTree, url + key + '/', deph + 1);
+                    this.buildTree(jsonSubTree, url + folderName + '/', deph + 1);
                 }
                 this.treeMarkup += `</li></ul>`;
             }
@@ -388,7 +393,7 @@ class fileTree {
                 });
             };
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            xhr.send('dir=' + encodeURI(this.options.mainDir) + '&ext=' + JSON.stringify(this.options.extensions));
+            xhr.send('dir=' + encodeURI(this.options.mainDir) + '&ext=' + JSON.stringify(this.options.extensions) + '&folder_prefix=' + this.options.folderPrefix);
         });
     }
 
