@@ -16,7 +16,9 @@ class fileTree {
             mainDir: 'demo-files',
             maxDeph: 3,
             cancelBtn: true,
+            cancelBtnText: 'Cancel',
             okBtn: true,
+            okBtnText: 'OK',
             template: 'bootstrap4',
             elementClick: function (filePath, fileName, e) {
                 console.log(filePath);
@@ -453,7 +455,9 @@ class fileTree {
                     img.src = file.url;
                     img.onload = () => {
                         let el = document.getElementById(cloneId);
-                        el.querySelector('.ft-image-size').innerHTML = img.width.toString() + 'x' + img.height.toString() + 'px';
+                        if (el !== null) {
+                            el.querySelector('.ft-image-size').innerHTML = img.width.toString() + 'x' + img.height.toString() + 'px';
+                        }
                     };
                 }
                 else {
@@ -474,8 +478,16 @@ class fileTree {
                 if (this.options.okBtn !== true) {
                     $targetId.querySelector('.explorer-ok-btn').remove();
                 }
+                else {
+                    // translate
+                    $targetId.querySelector('.explorer-ok-btn').textContent = this.options.okBtnText;
+                }
                 if (this.options.cancelBtn !== true) {
                     $targetId.querySelector('.explorer-cancel-btn').remove();
+                }
+                else {
+                    // translate
+                    $targetId.querySelector('.explorer-cancel-btn').textContent = this.options.cancelBtnText;
                 }
                 if (this.options.okBtn === true) {
                     $targetId.querySelector('.explorer-ok-btn').addEventListener('click', (e) => {

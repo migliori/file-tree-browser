@@ -19,8 +19,10 @@
         <a href="#" class="btn btn-secondary mr-4 disabled">Demo 1</a>
         <a href="demo-2.html" class="btn btn-primary">Demo 2</a>
     </div>
-
-    <p class="text-center">Documentation &amp; Download: <a href="https://github.com/migliori/file-tree-generator" title="File Tree Generator">https://github.com/migliori/file-tree-generator</a></p>
+    <div class="container py-2 mb-4 text-center">
+        <p class="lead">This script scans a directory recursively and allows to navigate inside it like a file explorer.<br> It normally allows to drag and drop files from one directory to another.<br> This feature is disabled in the demo.</p>
+        <p class="text-center">Documentation &amp; Download: <a href="https://github.com/migliori/file-tree-generator" title="File Tree Generator">https://github.com/migliori/file-tree-generator</a></p>
+    </div>
     <div class="py-2 mb-4 text-center text-muted border">
         <p id="ft-output" class="small mb-0">&nbsp;<br>&nbsp;</p>
     </div>
@@ -39,6 +41,7 @@
 
             var options = {
                 mainDir: 'demo-files',
+                dragAndDrop: false,
                 elementClick: function (filePath, fileName) {
                     document.getElementById('ft-output').innerHTML = '<strong>filePath</strong>: ' + filePath + ',<br><strong>fileName</strong>: ' + fileName;
                 },

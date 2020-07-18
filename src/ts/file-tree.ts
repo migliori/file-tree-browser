@@ -30,7 +30,9 @@ class fileTree {
             mainDir: 'demo-files',
             maxDeph: 3,
             cancelBtn: true,
+            cancelBtnText: 'Cancel',
             okBtn: true,
+            okBtnText: 'OK',
             template: 'bootstrap4',
             elementClick: function (filePath: string, fileName: string, e: Event) {
                 console.log(filePath);
@@ -495,8 +497,10 @@ class fileTree {
                     let img = new Image();
                     img.src = file.url;
                     img.onload = () => {
-                        let el:HTMLElement = document.getElementById(cloneId);
-                        el.querySelector('.ft-image-size').innerHTML = img.width.toString() + 'x' + img.height.toString() + 'px';
+                        let el: HTMLElement = document.getElementById(cloneId);
+                        if (el !== null) {
+                            el.querySelector('.ft-image-size').innerHTML = img.width.toString() + 'x' + img.height.toString() + 'px';
+                        }
                     };
                 } else {
                     clone = explorerFile.content.cloneNode(true);
@@ -516,9 +520,15 @@ class fileTree {
                 $targetId.querySelector('.ft-explorer').appendChild(explorerActionBtnsClone);
                 if (this.options.okBtn !== true) {
                     $targetId.querySelector('.explorer-ok-btn').remove();
+                } else {
+                    // translate
+                    $targetId.querySelector('.explorer-ok-btn').textContent = this.options.okBtnText;
                 }
                 if (this.options.cancelBtn !== true) {
                     $targetId.querySelector('.explorer-cancel-btn').remove();
+                } else {
+                    // translate
+                    $targetId.querySelector('.explorer-cancel-btn').textContent = this.options.cancelBtnText;
                 }
                 if (this.options.okBtn === true) {
                     $targetId.querySelector('.explorer-ok-btn').addEventListener('click', (e: any) => {

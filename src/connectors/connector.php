@@ -17,14 +17,12 @@
 //
 
 $root = rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-// $main_dir = $root . rtrim(urldecode($_POST['dir']), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-// $authorized_ext = array_values(json_decode(stripslashes($_POST['ext'])));
+$main_dir = $root . rtrim(urldecode($_POST['dir']), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+$authorized_ext = array_values(json_decode(stripslashes($_POST['ext'])));
 $folder_prefix = '';
 if (preg_match('`[a-z-]+`', $_POST['folder_prefix'])) {
     $folder_prefix = $_POST['folder_prefix'];
 }
-$main_dir = $root . '/demo-files' . DIRECTORY_SEPARATOR;
-$authorized_ext = ['.jpg', '.jpeg', '.png'];
 if (file_exists($main_dir)) {
     $filedata = scan_recursively($main_dir, $authorized_ext, $folder_prefix);
     echo json_encode($filedata);

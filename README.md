@@ -1,5 +1,9 @@
 # File Tree Generator
 
+## Demo
+
+<https://www.file-tree-generator.miglisoft.com/>
+
 ## Table of contents
 
 * [Overview](#overview)
@@ -78,7 +82,9 @@ extensions | array | ['.*'] | Array with the authorized file extensions
 mainDir | string | 'demo-files' | main directory id
 maxDeph | number | 3 | deph of the folders to browse from the main directory
 cancelBtn | boolean | true | add a cancel button or not
+cancelBtnText | string | 'Cancel' | text for the *Cancel* button
 okBtn | boolean | true | add an OK button or not
+okBtnText | string | 'Ok' | text for the *Ok* button
 template | string | 'bootstrap4' | name of the HTML/CSS template files in *dist/templates/*
 elementClick | function | `function (filePath, fileName) {console.log(filePath);    console.log(fileName);}` | callback function called when the user clicks any file in the explorer
 cancelBtnClick | function | `function () { console.log('Cancel'); }` | callback function called when the user clicks the explorer *cancel* button
