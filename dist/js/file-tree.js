@@ -177,7 +177,7 @@ class fileTree {
                 const folderName = key.replace(this.options.folderPrefix, '');
                 folderContent.folders.push({
                     parent: data.parent,
-                    dataRefId: key + '-' + (deph + 1).toString(),
+                    dataRefId: this.sanitizeFolderOrFile(key, 'folder') + '-' + (deph + 1).toString(),
                     name: folderName,
                     url: url + folderName + '/'
                 });
@@ -222,7 +222,7 @@ class fileTree {
             let jsonSubTree = jst[key];
             if (typeof (jsonSubTree[0]) === 'object') {
                 // directory
-                const folderId = key + '-' + deph.toString();
+                const folderId = this.sanitizeFolderOrFile(key, 'folder') + '-' + deph.toString();
                 const folderName = key.replace(this.options.folderPrefix, '');
                 this.foldersContent[folderId] = this.buildFolderContent(jsonSubTree, url + folderName + '/', deph);
                 this.treeMarkup += `<ul><li id="${folderId}" class="ft-folder-container"><div><i class="${this.icons.folder}"></i><a href="#" data-url="${url + folderName}">${folderName}</a></div>`;
@@ -617,6 +617,33 @@ class fileTree {
             }
         }
         return Parents;
+    }
+    /**
+ * @description Sanitizes a folder or file name to work with #name of legacy system
+ *              Legacy system unknown
+ * @author BM67
+ * @param {String} name The string to sanitize
+ * @param {String} type  Optional "file" or default is assumed "folder"
+ * @return {String} The sanitized name
+ */
+    sanitizeFolderOrFile(name, type) {
+        var parts, ext = "";
+        if (type === "file") {
+            parts = name.split(".");
+            ext = "." + parts.pop();
+            name = parts.join("_");
+        }
+        name = name.toLowerCase();
+        const items = [
+            [/[+\&]/g, "u"],
+            [/ä/g, "ae"],
+            [/ö/g, "oe"],
+            [/ü/g, "ue"],
+            [/ß/g, "ss"],
+            [/[ \`\´\?\(\)\[\]\{\}\/\\$\§\"\'\!\=\-\.\,\;\:<>\|\^\°\*\+\~\%]/g, "_"]
+        ];
+        items.forEach(item => name = name.replace(item[0], item[1]));
+        return name + ext;
     }
     switchMode() {
         if (this.options.explorerMode === 'list') {
