@@ -157,14 +157,14 @@ class fileTree {
         document.body.appendChild(script);
         return new Promise((res, rej) => {
             script.onload = function () {
-                res();
+                res(null);
             };
             script.onerror = function () {
                 rej();
             };
         });
     }
-    buildFolderContent(jst = this.jsonTree, url, deph) {
+    buildFolderContent(jst, url, deph) {
         const folderContent = {
             folders: [],
             files: []
@@ -218,9 +218,8 @@ class fileTree {
             deph += 1;
         }
         for (let key in jst) {
-            // key = key.replace(this.options.folderPrefix, '');
             let jsonSubTree = jst[key];
-            if (typeof (jsonSubTree[0]) === 'object') {
+            if (typeof (jsonSubTree.ext) === 'undefined') {
                 // directory
                 const folderId = this.sanitizeFolderOrFile(key, 'folder') + '-' + deph.toString();
                 const folderName = key.replace(this.options.folderPrefix, '');

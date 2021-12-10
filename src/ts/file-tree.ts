@@ -177,7 +177,7 @@ class fileTree {
         document.body.appendChild(script);
         return new Promise((res, rej) => {
             script.onload = function () {
-                res();
+                res(null);
             }
             script.onerror = function () {
                 rej();
@@ -185,7 +185,7 @@ class fileTree {
         });
     }
 
-    private buildFolderContent(jst: Array<any> = this.jsonTree, url: string, deph: number) {
+    private buildFolderContent(jst: Array<any>, url: string, deph: number) {
         const folderContent: any = {
             folders: [],
             files: []
@@ -239,9 +239,8 @@ class fileTree {
             deph += 1;
         }
         for (let key in jst) {
-            // key = key.replace(this.options.folderPrefix, '');
             let jsonSubTree: any = jst[key];
-            if (typeof (jsonSubTree[0]) === 'object') {
+            if (typeof (jsonSubTree.ext) === 'undefined') {
                 // directory
                 const folderId: any = this.sanitizeFolderOrFile(key, 'folder') + '-' + deph.toString();
                 const folderName = key.replace(this.options.folderPrefix, '');
