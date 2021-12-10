@@ -36,15 +36,16 @@ function scan_recursively($source_dir, $authorized_ext, $folder_prefix, $directo
         $filedata   = array();
         $new_depth  = $directory_depth - 1;
         $source_dir = rtrim($source_dir, '/').'/';
-        $parent_folder = null;
 
-        while (false !== ($file = readdir($fp))) {
+        $files = scandir($source_dir);
+        natsort($files);
+        foreach ($files as $file) {
             // Remove '.', '..', and hidden files [optional]
-            if (! trim($file, '.') or ($hidden == false && $file[0] == '.')) {
+            if (! trim($file, '.') || (!$hidden && $file[0] == '.')) {
                 continue;
             }
 
-            if (($directory_depth < 1 or $new_depth > 0) && @is_dir($source_dir.$file)) {
+            if (($directory_depth < 1 || $new_depth > 0) && @is_dir($source_dir.$file)) {
                 $filedata[$folder_prefix . $file] = scan_recursively($source_dir.$file.'/', $authorized_ext, $folder_prefix, $new_depth, $hidden);
             } else if(is_authorized($file, $authorized_ext)) {
                 $filedata[] = array(

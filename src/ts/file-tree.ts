@@ -116,7 +116,7 @@ class fileTree {
         this.loadCss();
         $targetId.querySelectorAll('.ft-tree')[0].innerHTML = this.treeMarkup;
         const folders = $targetId.querySelectorAll('.ft-tree .ft-folder-container');
-        Array.prototype.forEach.call(folders, (el: HTMLElement, i: number) => {
+        Array.prototype.forEach.call(folders, (el: HTMLElement) => {
             el.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -125,7 +125,7 @@ class fileTree {
                 const parents = this.parentsUntil(el, 'ft-folder-container', 'ft-' + this.targetId + '-root');
 
                 // open all the parent folders, close the others
-                Array.prototype.forEach.call(folders, (folder: HTMLElement, i: number) => {
+                Array.prototype.forEach.call(folders, (folder: HTMLElement) => {
                     const ic = folder.querySelector('i');
                     if (parents.indexOf(folder) > -1) {
                         folder.classList.add('ft-folder-open');
@@ -312,7 +312,6 @@ class fileTree {
                 destpath = encodeURIComponent(destpath);
                 if (destpath !== filepath) {
                     const data: string = `filename=${filename}&filepath=${filepath}&destpath=${destpath}&filehash=${filehash}&ext=${ext}`;
-                    // console.log('SEND TO ' + destpath);
                     index = e.detail.item.children.length - 1;
 
                     // move the file on server
@@ -331,8 +330,8 @@ class fileTree {
 
                                 // rebuild tree
                                 this.getFiles()
-                                    .then((data: string) => {
-                                        this.jsonTree = JSON.parse(data);
+                                    .then((responsedata: string) => {
+                                        this.jsonTree = JSON.parse(responsedata);
                                         if (this.jsonTree.error) {
                                             throw this.jsonTree.error;
                                         }
@@ -377,7 +376,6 @@ class fileTree {
             let xhr = new XMLHttpRequest();
             xhr.open('POST', this.scriptSrc + 'connectors/connector.' + this.options.connector, true);
             xhr.onload = function () {
-                // console.log(xhr.response);
                 if (this.status >= 200 && this.status < 300) {
                     resolve(xhr.response);
                 } else {
