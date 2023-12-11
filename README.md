@@ -28,6 +28,14 @@ a **PHP connector** is provided to retrieve the main directory content, you can 
 
 The default template is built with Bootstrap 4, but Bootstrap is **not required** at all. You can easily **add your own HTML/CSS template** and change markup to fit your needs.
 
+## Installation
+
+Clone / download or install with npm
+
+```bash
+  npm install @migliori/file-tree-generator@1.1.1
+```
+
 ## Quick start
 
 * Upload the *dist* folder on your server
