@@ -32,7 +32,7 @@
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
     "tsify": "^5.0.4",
-    "typescript": "^3.6.4",
+    "typescript": "^5.3.3",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^4.0.0"
