@@ -74,7 +74,7 @@ Clone / download or install with npm
             }
         };
 
-        var ft = new fileTree('file-tree-wrapper', options);
+        var ft = new FileTree('file-tree-wrapper', options);
     });
 </script>
 ```
@@ -128,7 +128,7 @@ They are located in *dist/templates/*
                 template: 'your-custom-template'
             };
 
-            var ft = new fileTree('file-tree-wrapper', options);
+            var ft = new FileTree('file-tree-wrapper', options);
         });
     </script>
     ```
@@ -158,7 +158,7 @@ You can write your own in any server language (nodeJs, ASP, ...). ie:
                 connector: 'asp'
             };
 
-            var ft = new fileTree('file-tree-wrapper', options);
+            var ft = new FileTree('file-tree-wrapper', options);
         });
     </script>
     ```

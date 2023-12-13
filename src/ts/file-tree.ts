@@ -1,7 +1,7 @@
 declare const CryptoJS: any;
 declare const sortable: any;
 
-class fileTree {
+class FileTree {
     currentFolderId: string;
     extTypes: object;
     fileTypes: Array<string>;
@@ -46,7 +46,7 @@ class fileTree {
                 console.log(fileName);
             }
         };
-        this.options = Object.assign({}, defaults, options);
+        this.options = { ...defaults, ...options };
 
         this.icons = {
             archive: 'ft-icon-file-zip',
@@ -81,34 +81,34 @@ class fileTree {
         this.scriptSrc = this.getScriptScr();
 
         this.getFiles()
-        .then((data: string) => {
-            this.jsonTree = JSON.parse(data);
-            if (this.jsonTree.error) {
-                throw this.jsonTree.error;
-            }
-
-            this.buildTree();
-            if (this.options.dragAndDrop === true) {
-                if (typeof (CryptoJS) === "undefined") {
-                    this.loadScript(this.scriptSrc + 'lib/crypto-js/crypto-js.min.js');
+            .then((data: string) => {
+                this.jsonTree = JSON.parse(data);
+                if (this.jsonTree.error) {
+                    throw this.jsonTree.error;
                 }
-                if (typeof (sortable) === "undefined") {
-                    this.loadScript(this.scriptSrc + 'lib/html5sortable/html5sortable.min.js').then(() => {
+
+                this.buildTree();
+                if (this.options.dragAndDrop === true) {
+                    if (typeof (CryptoJS) === "undefined") {
+                        this.loadScript(this.scriptSrc + 'lib/crypto-js/crypto-js.min.js');
+                    }
+                    if (typeof (sortable) === "undefined") {
+                        this.loadScript(this.scriptSrc + 'lib/html5sortable/html5sortable.min.js').then(() => {
+                            this.render();
+                        })
+                            .catch(() => {
+                                console.error('Script loading failed :( ');
+                            });
+                    } else {
                         this.render();
-                    })
-                        .catch(() => {
-                            console.error('Script loading failed :( ');
-                        });
+                    }
                 } else {
                     this.render();
                 }
-            } else {
-                this.render();
-            }
-        })
-        .catch((err) => {
-            console.error('Augh, there was an error!', err);
-        });
+            })
+            .catch((err) => {
+                console.error('Augh, there was an error!', err);
+            });
     }
 
     public render() {
@@ -172,15 +172,15 @@ class fileTree {
     }
 
     private loadScript(src: string) {
-        var script = document.createElement('script');
+        const script = document.createElement('script');
         script.setAttribute('src', src);
         document.body.appendChild(script);
         return new Promise((res, rej) => {
             script.onload = function () {
                 res(null);
             }
-            script.onerror = function () {
-                rej();
+            script.onerror = function (e) {
+                rej(e);
             }
         });
     }
@@ -282,14 +282,12 @@ class fileTree {
                 } else {
                     // console.log('skip #' + folderId);
                 }
+            } else if (folderId === this.currentFolderId) {
+                sortable('#' + folderId, 'disable');
+                // console.log('disable #' + folderId);
             } else {
-                if (folderId === this.currentFolderId) {
-                    sortable('#' + folderId, 'disable');
-                    // console.log('disable #' + folderId);
-                } else {
-                    sortable('#' + folderId, 'enable');
-                    // console.log('enable #' + folderId);
-                }
+                sortable('#' + folderId, 'enable');
+                // console.log('enable #' + folderId);
             }
         });
     }
@@ -315,14 +313,14 @@ class fileTree {
                     index = e.detail.item.children.length - 1;
 
                     // move the file on server
-                    var request = new XMLHttpRequest();
+                    const request = new XMLHttpRequest();
                     request.open('POST', this.scriptSrc + 'ajax/move-file.php', true);
                     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 
                     request.onload = () => {
                         if (request.status >= 200 && request.status < 400) {
                             // Success!
-                            var resp = JSON.parse(request.response);
+                            const resp = JSON.parse(request.response);
                             if (resp.status === 'success') {
                                 const container: HTMLElement = document.getElementById(e.detail.destination.container.id);
                                 const itemIndex: number = e.detail.destination.index;
@@ -409,19 +407,19 @@ class fileTree {
     }
 
     private humanFileSize(bytes: number, si: boolean) {
-        var thresh = si ? 1000 : 1024;
-        if(Math.abs(bytes) < thresh) {
+        const thresh = si ? 1000 : 1024;
+        if (Math.abs(bytes) < thresh) {
             return bytes + ' B';
         }
-        var units = si
-            ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
-            : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
-        var u = -1;
+        const units = si
+            ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+            : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+        let u = -1;
         do {
             bytes /= thresh;
             ++u;
-        } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-        return bytes.toFixed(1)+' '+units[u];
+        } while (Math.abs(bytes) >= thresh && u < units.length - 1);
+        return bytes.toFixed(1) + ' ' + units[u];
     }
 
     private loadFolder(folderId: any) {
@@ -449,25 +447,25 @@ class fileTree {
 
             switch (this.options.explorerMode) {
                 case 'list':
-                explorerContainer = document.querySelector('#explorer-list');
-                explorerFile = document.querySelector('#explorer-list-file');
-                explorerFolder = document.querySelector('#explorer-list-folder');
-                explorerImage = document.querySelector('#explorer-list-image');
-                output = explorerContainer.content.querySelector('.ft-explorer-list-container').cloneNode(true);
+                    explorerContainer = document.querySelector('#explorer-list');
+                    explorerFile = document.querySelector('#explorer-list-file');
+                    explorerFolder = document.querySelector('#explorer-list-folder');
+                    explorerImage = document.querySelector('#explorer-list-image');
+                    output = explorerContainer.content.querySelector('.ft-explorer-list-container').cloneNode(true);
 
-                break;
+                    break;
 
                 case 'grid':
-                explorerContainer = document.querySelector('#explorer-grid');
-                explorerFile = document.querySelector('#explorer-grid-file');
-                explorerFolder = document.querySelector('#explorer-grid-folder');
-                explorerImage = document.querySelector('#explorer-grid-image');
-                output = explorerContainer.content.querySelector('.ft-explorer-grid-container').cloneNode(true);
+                    explorerContainer = document.querySelector('#explorer-grid');
+                    explorerFile = document.querySelector('#explorer-grid-file');
+                    explorerFolder = document.querySelector('#explorer-grid-folder');
+                    explorerImage = document.querySelector('#explorer-grid-image');
+                    output = explorerContainer.content.querySelector('.ft-explorer-grid-container').cloneNode(true);
 
-                break;
+                    break;
 
                 default:
-                break;
+                    break;
             }
 
             for (let key in folders) {
@@ -596,7 +594,7 @@ class fileTree {
                     const target: any = e.target.closest('a');
                     const targetId = target.getAttribute('data-href');
                     if (targetId !== null) {
-                        var event = document.createEvent('HTMLEvents');
+                        let event = document.createEvent('HTMLEvents');
                         event.initEvent('click', true, false);
                         document.getElementById(targetId).dispatchEvent(event);
                     }
@@ -611,9 +609,9 @@ class fileTree {
             }
 
         })
-        .catch((err) => {
-            console.error('Augh, there was an error!', err);
-        });
+            .catch((err) => {
+                console.error('Augh, there was an error!', err);
+            });
     }
 
     private loadTemplates() {
@@ -685,14 +683,14 @@ class fileTree {
         }
         name = name.toLowerCase();
         const items: Array<Array<any>> =
-        [
-            [/[+\&]/g, "u"],
-            [/ä/g, "ae"],
-            [/ö/g, "oe"],
-            [/ü/g, "ue"],
-            [/ß/g, "ss"],
-            [/[ \`\´\?\(\)\[\]\{\}\/\\$\§\"\'\!\=\-\.\,\;\:<>\|\^\°\*\+\~\%]/g, "_"]
-        ]
+            [
+                [/[+\&]/g, "u"],
+                [/ä/g, "ae"],
+                [/ö/g, "oe"],
+                [/ü/g, "ue"],
+                [/ß/g, "ss"],
+                [/[ \`\´\?\(\)\[\]\{\}\/\\$\§\"\'\!\=\-\.\,\;\:<>\|\^\°\*\+\~\%]/g, "_"]
+            ]
         items.forEach(item => name = name.replace(item[0], item[1]));
         return name + ext;
     }
@@ -711,4 +709,4 @@ class fileTree {
     }
 }
 
-Object.assign(window, { fileTree });
+Object.assign(window, { FileTree });

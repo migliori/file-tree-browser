@@ -1,18 +1,18 @@
 
-var gulp = require('gulp');
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
-var watchify = require('watchify');
-var tsify = require('tsify');
-var fancy_log = require('fancy-log');
-var uglify = require('gulp-uglify');
-var sourcemaps = require('gulp-sourcemaps');
-var buffer = require('vinyl-buffer');
-var paths = {
+const gulp = require('gulp');
+const browserify = require('browserify');
+const source = require('vinyl-source-stream');
+const watchify = require('watchify');
+const tsify = require('tsify');
+const fancy_log = require('fancy-log');
+const uglify = require('gulp-uglify');
+const sourcemaps = require('gulp-sourcemaps');
+const buffer = require('vinyl-buffer');
+const paths = {
     files: ['src/ajax/*.*', 'src/connectors/*.*', 'src/lib/*?/*.*', 'src/templates/*.*', 'src/icons/fonts/*.*', 'src/icons/style.css']
 };
 
-var watchedBrowserify = watchify(browserify({
+const watchedBrowserify = watchify(browserify({
     basedir: '.',
     debug: true,
     entries: ['src/ts/file-tree.ts'],
@@ -20,7 +20,7 @@ var watchedBrowserify = watchify(browserify({
     packageCache: {}
 }).plugin(tsify));
 
-function bundle() {
+function bundle () {
     return watchedBrowserify
         /* .transform('babelify', {
             presets: ['es2015'],

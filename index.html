@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>File Tree Generator Demo</title>
+    <title>File Tree Demo</title>
     <meta name="description" content="Retrieves directories and files recursively with Ajax from a main directory and displays the tree structure. Programmed in pure Javascript / CSS without any dependency. PHP connector is provided, you can write your own in any server language (NodeJS, ASP, ...)">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,7 +13,7 @@
 
 <body>
 
-    <h1 class="pt-5 text-center">File Tree Generator Demo</h1>
+    <h1 class="pt-5 text-center">File Tree Demo</h1>
 
     <div class="d-flex mx-auto justify-content-center my-3" role="group">
         <a href="#" class="btn btn-secondary mr-4 disabled">Demo 1</a>
@@ -21,7 +21,7 @@
     </div>
     <div class="container py-2 mb-4 text-center">
         <p class="lead">This script scans a directory recursively and allows to navigate inside it like a file explorer.<br> It normally allows to drag and drop files from one directory to another.<br> This feature is disabled in the demo.</p>
-        <p class="text-center">Documentation &amp; Download: <a href="https://github.com/migliori/file-tree-generator" title="File Tree Generator">https://github.com/migliori/file-tree-generator</a></p>
+        <p class="text-center">Documentation &amp; Download: <a href="https://github.com/migliori/file-tree" title="File Tree">https://github.com/migliori/file-tree</a></p>
     </div>
     <div class="py-2 mb-4 text-center text-muted border">
         <p id="ft-output" class="small mb-0">&nbsp;<br>&nbsp;</p>
@@ -39,7 +39,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
 
-            var options = {
+            const options = {
                 mainDir: 'demo-files',
                 dragAndDrop: false,
                 elementClick: function (filePath, fileName) {
@@ -53,7 +53,7 @@
                 }
             };
 
-            var ft = new fileTree('file-tree-wrapper', options);
+            const ft = new FileTree('file-tree-wrapper', options);
         });
     </script>
 </body>

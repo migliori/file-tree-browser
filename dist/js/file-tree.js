@@ -1,5 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-class fileTree {
+class FileTree {
     constructor(targetId, options = {}) {
         this.listeningFolders = [];
         this.template = null;
@@ -32,7 +32,7 @@ class fileTree {
                 console.log(fileName);
             }
         };
-        this.options = Object.assign({}, defaults, options);
+        this.options = Object.assign(Object.assign({}, defaults), options);
         this.icons = {
             archive: 'ft-icon-file-zip',
             excel: 'ft-icon-file-excel',
@@ -152,15 +152,15 @@ class fileTree {
         }
     }
     loadScript(src) {
-        var script = document.createElement('script');
+        const script = document.createElement('script');
         script.setAttribute('src', src);
         document.body.appendChild(script);
         return new Promise((res, rej) => {
             script.onload = function () {
                 res(null);
             };
-            script.onerror = function () {
-                rej();
+            script.onerror = function (e) {
+                rej(e);
             };
         });
     }
@@ -261,15 +261,13 @@ class fileTree {
                     // console.log('skip #' + folderId);
                 }
             }
+            else if (folderId === this.currentFolderId) {
+                sortable('#' + folderId, 'disable');
+                // console.log('disable #' + folderId);
+            }
             else {
-                if (folderId === this.currentFolderId) {
-                    sortable('#' + folderId, 'disable');
-                    // console.log('disable #' + folderId);
-                }
-                else {
-                    sortable('#' + folderId, 'enable');
-                    // console.log('enable #' + folderId);
-                }
+                sortable('#' + folderId, 'enable');
+                // console.log('enable #' + folderId);
             }
         });
     }
@@ -292,13 +290,13 @@ class fileTree {
                     const data = `filename=${filename}&filepath=${filepath}&destpath=${destpath}&filehash=${filehash}&ext=${ext}`;
                     index = e.detail.item.children.length - 1;
                     // move the file on server
-                    var request = new XMLHttpRequest();
+                    const request = new XMLHttpRequest();
                     request.open('POST', this.scriptSrc + 'ajax/move-file.php', true);
                     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
                     request.onload = () => {
                         if (request.status >= 200 && request.status < 400) {
                             // Success!
-                            var resp = JSON.parse(request.response);
+                            const resp = JSON.parse(request.response);
                             if (resp.status === 'success') {
                                 const container = document.getElementById(e.detail.destination.container.id);
                                 const itemIndex = e.detail.destination.index;
@@ -377,14 +375,14 @@ class fileTree {
         }
     }
     humanFileSize(bytes, si) {
-        var thresh = si ? 1000 : 1024;
+        const thresh = si ? 1000 : 1024;
         if (Math.abs(bytes) < thresh) {
             return bytes + ' B';
         }
-        var units = si
+        const units = si
             ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
             : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-        var u = -1;
+        let u = -1;
         do {
             bytes /= thresh;
             ++u;
@@ -547,7 +545,7 @@ class fileTree {
                     const target = e.target.closest('a');
                     const targetId = target.getAttribute('data-href');
                     if (targetId !== null) {
-                        var event = document.createEvent('HTMLEvents');
+                        let event = document.createEvent('HTMLEvents');
                         event.initEvent('click', true, false);
                         document.getElementById(targetId).dispatchEvent(event);
                     }
@@ -656,7 +654,8 @@ class fileTree {
         }
     }
 }
-Object.assign(window, { fileTree });
+Object.assign(window, { FileTree });
+
 },{}]},{},[1])
 
 //# sourceMappingURL=file-tree.js.map
