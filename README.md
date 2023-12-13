@@ -1,4 +1,4 @@
-# File Tree Generator
+# File Tree
 
 ## Demo
 
@@ -18,11 +18,11 @@
 
 ## Overview
 
-**File Tree Generator** is a Javascript plugin built to **browse folders** and **select files**.
+**File Tree** is a Javascript plugin built to **browse folders** and **select files**.
 
 It retrieves directories and files recursively with Ajax from a main directory and displays the tree structure. You can browse and select, move files from folder to folder, do any stuff with the choosen file.
 
-File Tree Generator is programmed in **Vanilla Javascript** (compiled TypeScript) and **doesn't require any dependency**.
+File Tree is programmed in **Vanilla Javascript** (compiled TypeScript) and **doesn't require any dependency**.
 
 a **PHP connector** is provided to retrieve the main directory content, you can write your own in any server language (NodeJS, ASP, ...).
 
@@ -33,7 +33,7 @@ The default template is built with Bootstrap 4, but Bootstrap is **not required*
 Clone / download or install with npm
 
 ```bash
-  npm install @migliori/file-tree-generator@1.1.1
+  npm install @migliori/file-tree@1.1.1
 ```
 
 ## Quick start
@@ -45,7 +45,7 @@ Clone / download or install with npm
 <!--
     This is a minimal example.
     You can change anything here,
-    The File Tree Generator requires only a main wrapper
+    The File Tree requires only a main wrapper
     with .ft-tree and .ft-explorer inside.
 -->
 <div id="custom-id">
@@ -169,7 +169,7 @@ Any new connector or cool template is welcome!
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/migliori/file-tree-generator/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/migliori/file-tree/tags).
 
 ## Authors
 
