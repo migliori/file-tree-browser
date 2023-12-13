@@ -1,6 +1,6 @@
 <?php
 //
-// jQuery File Tree PHP Connector
+// jQuery File Tree Browser PHP Connector
 //
 // Version 1.01
 //
@@ -13,7 +13,7 @@
 // 1.01 - updated to work with foreign characters in directory/file names (12 April 2008)
 // 1.00 - released (24 March 2008)
 //
-// Output a list of files for jQuery File Tree
+// Output a list of files for jQuery File Tree Browser
 //
 
 $root = rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;

@@ -15,7 +15,7 @@ const paths = {
 const watchedBrowserify = watchify(browserify({
     basedir: '.',
     debug: true,
-    entries: ['src/ts/file-tree.ts'],
+    entries: ['src/ts/file-tree-browser.ts'],
     cache: {},
     packageCache: {}
 }).plugin(tsify));
@@ -28,7 +28,7 @@ function bundle () {
         }) */
         .bundle()
         .on('error', fancy_log)
-        .pipe(source('js/file-tree.js'))
+        .pipe(source('js/file-tree-browser.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(sourcemaps.write('./'))

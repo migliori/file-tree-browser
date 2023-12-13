@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>File Tree Demo</title>
+    <title>File Tree Browser Demo</title>
     <meta name="description" content="Retrieves directories and files recursively with Ajax from a main directory and displays the tree structure. Programmed in pure Javascript / CSS without any dependency. PHP connector is provided, you can write your own in any server language (NodeJS, ASP, ...)">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,7 +13,7 @@
 
 <body>
 
-    <h1 class="pt-5 text-center">File Tree Demo</h1>
+    <h1 class="pt-5 text-center">File Tree Browser Demo</h1>
 
     <div class="d-flex mx-auto justify-content-center my-3" role="group">
         <a href="#" class="btn btn-secondary mr-4 disabled">Demo 1</a>
@@ -21,12 +21,12 @@
     </div>
     <div class="container py-2 mb-4 text-center">
         <p class="lead">This script scans a directory recursively and allows to navigate inside it like a file explorer.<br> It normally allows to drag and drop files from one directory to another.<br> This feature is disabled in the demo.</p>
-        <p class="text-center">Documentation &amp; Download: <a href="https://github.com/migliori/file-tree" title="File Tree">https://github.com/migliori/file-tree</a></p>
+        <p class="text-center">Documentation &amp; Download: <a href="https://github.com/migliori/file-tree-browser" title="File Tree Browser">https://github.com/migliori/file-tree-browser</a></p>
     </div>
     <div class="py-2 mb-4 text-center text-muted border">
         <p id="ft-output" class="small mb-0">&nbsp;<br>&nbsp;</p>
     </div>
-    <div class="container" id="file-tree-wrapper">
+    <div class="container" id="file-tree-browser-wrapper">
         <div class="row">
             <div class="col-sm-3 ft-tree"></div>
             <div class="col-sm-9 ft-explorer"></div>
@@ -35,7 +35,7 @@
 
     <p class="text-center"><a href="https://www.miglisoft.com/">@miglisoft</a></p>
 
-    <script src="dist/js/file-tree.js"></script>
+    <script src="dist/js/file-tree-browser.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
 
@@ -53,7 +53,7 @@
                 }
             };
 
-            const ft = new FileTree('file-tree-wrapper', options);
+            const ft = new FileTreeBrowser('file-tree-browser-wrapper', options);
         });
     </script>
 </body>

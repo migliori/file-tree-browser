@@ -1,6 +1,6 @@
 {
     "files": [
-        "src/ts/file-tree.ts"
+        "src/ts/file-tree-browser-browser.ts"
     ],
     "compilerOptions": {
         "noImplicitAny": true,

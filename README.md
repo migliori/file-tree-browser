@@ -1,4 +1,4 @@
-# File Tree
+# File Tree Browser
 
 ## Demo
 
@@ -18,11 +18,11 @@
 
 ## Overview
 
-**File Tree** is a Javascript plugin built to **browse folders** and **select files**.
+**File Tree Browser** is a Javascript plugin built to **browse folders** and **select files**.
 
 It retrieves directories and files recursively with Ajax from a main directory and displays the tree structure. You can browse and select, move files from folder to folder, do any stuff with the choosen file.
 
-File Tree is programmed in **Vanilla Javascript** (compiled TypeScript) and **doesn't require any dependency**.
+File Tree Browser is programmed in **Vanilla Javascript** (compiled TypeScript) and **doesn't require any dependency**.
 
 a **PHP connector** is provided to retrieve the main directory content, you can write your own in any server language (NodeJS, ASP, ...).
 
@@ -33,7 +33,7 @@ The default template is built with Bootstrap 4, but Bootstrap is **not required*
 Clone / download or install with npm
 
 ```bash
-  npm install @migliori/file-tree@1.1.1
+  npm install @migliori/file-tree-browser@1.1.1
 ```
 
 ## Quick start
@@ -45,7 +45,7 @@ Clone / download or install with npm
 <!--
     This is a minimal example.
     You can change anything here,
-    The File Tree requires only a main wrapper
+    The File Tree Browser requires only a main wrapper
     with .ft-tree and .ft-explorer inside.
 -->
 <div id="custom-id">
@@ -57,7 +57,7 @@ Clone / download or install with npm
 * add the Javascript code:
 
 ```javascript
-<script src="dist/js/file-tree.js"></script>
+<script src="dist/js/file-tree-browser.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function(event) {
 
@@ -74,7 +74,7 @@ Clone / download or install with npm
             }
         };
 
-        var ft = new FileTree('file-tree-wrapper', options);
+        var ft = new FileTreeBrowser('file-tree-browser-wrapper', options);
     });
 </script>
 ```
@@ -128,7 +128,7 @@ They are located in *dist/templates/*
                 template: 'your-custom-template'
             };
 
-            var ft = new FileTree('file-tree-wrapper', options);
+            var ft = new FileTreeBrowser('file-tree-browser-wrapper', options);
         });
     </script>
     ```
@@ -158,7 +158,7 @@ You can write your own in any server language (nodeJs, ASP, ...). ie:
                 connector: 'asp'
             };
 
-            var ft = new FileTree('file-tree-wrapper', options);
+            var ft = new FileTreeBrowser('file-tree-browser-wrapper', options);
         });
     </script>
     ```
@@ -169,7 +169,7 @@ Any new connector or cool template is welcome!
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/migliori/file-tree/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/migliori/file-tree-browser/tags).
 
 ## Authors
 
