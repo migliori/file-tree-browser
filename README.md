@@ -4,7 +4,7 @@
 
 <https://www.file-tree-generator.miglisoft.com/>
 
-![File Tree Generator](file-tree-generator-preview.png)
+[![File Tree Generator](file-tree-generator-preview.png)](https://www.file-tree-generator.miglisoft.com)
 
 ## Table of contents
 
