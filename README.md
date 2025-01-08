@@ -4,6 +4,8 @@
 
 <https://www.file-tree-generator.miglisoft.com/>
 
+![File Tree Generator](file-tree-generator-preview.png)
+
 ## Table of contents
 
 * [Overview](#overview)
